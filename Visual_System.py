@@ -7,11 +7,36 @@ from Rubiks_Cube.solver   import Solver
 from Rubiks_Cube.cube     import Cube
 from Rubiks_Cube.optimize import optimize_moves
 
+def split(moves):
+  list = []
+
+  for index, char in enumerate(moves):
+    if index < len(moves) -1:
+      if moves[index+1] == 'i':
+        char += 'i'
+        list.append(char)
+      elif moves[index] != "i":
+        list.append(char)
+    else:
+      if moves[index] != "i":
+        list.append(char)
+  return list
+
 def insert():
   string = cube_string.get()
   cube   = Cube(string)
   current_cube_output.set(string)
   cube_output.set(cube)
+
+def move():
+    moves  = move_entry.get()
+    string = current_cube_output.get()
+    cube   = Cube(string)
+
+    cube.sequence(" ".join(split(moves)))
+    current_cube_output.set(cube.flat_str())
+    cube_output.set(cube)
+    move_entry.delete(0, 'end')
 
 def random_cube():
   SOLVED_CUBE_STR = "OOOOOOOOOYYYGGGWWWBBBYYYGGGWWWBBBYYYGGGWWWBBBRRRRRRRRR"
@@ -29,15 +54,14 @@ def Beginner():
   solver = Solver(cube)
 
   solver.solveBeginner()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""This is a complete Beginner solve solution,
   if you are trying to learn how to solve the Rubik's Cube,
   I would recommend using the smaller steps""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Intermediate():
   string = current_cube_output.get()
@@ -45,15 +69,14 @@ def Intermediate():
   solver = Solver(cube)
 
   solver.solveIntermediate()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""This is a complete Intermediate solve solution,
   if you are trying to learn how to solve the Rubik's Cube,
   I would recommend using the smaller steps""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Expert():
   string = current_cube_output.get()
@@ -61,15 +84,14 @@ def Expert():
   solver = Solver(cube)
 
   solver.solveExpert()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""This is a complete Expert solve solution,
   if you are trying to learn how to solve the Rubik's Cube,
   I would recommend using the smaller steps""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def White_Cross():
   string = current_cube_output.get()
@@ -77,8 +99,6 @@ def White_Cross():
   solver = Solver(cube)
 
   solver.white_cross()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The first stage is to make a white cross on the white face of the cube.
   You must find the four different edge cubies which contain a white
@@ -87,7 +107,8 @@ def White_Cross():
   edge cubies should also match their respective side center cubies """)
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def White_Cross_Corners():
   string = current_cube_output.get()
@@ -95,15 +116,14 @@ def White_Cross_Corners():
   solver = Solver(cube)
 
   solver.white_cross_corners()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The second stage is finishing the white face by placing the corner
   cubies containing a white facelet in their correct position,
   with taking the side face colors into account.""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Second_Layer():
   string = current_cube_output.get()
@@ -111,8 +131,6 @@ def Second_Layer():
   solver = Solver(cube)
 
   solver.second_layer()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The third stage is to finish the second layer.
   Find the correct edge cubie
@@ -123,7 +141,8 @@ def Second_Layer():
   his respective place on the F face of the cube.""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Yellow_Cross():
   string = current_cube_output.get()
@@ -131,8 +150,6 @@ def Yellow_Cross():
   solver = Solver(cube)
 
   solver.yellow_cross()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The fourth stage is to create the yellow cross
   on the U face of the cube.
@@ -141,7 +158,8 @@ def Yellow_Cross():
   which means you can skip this stage and go to the fifth stage.""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Yellow_Cross_Edges():
   string = current_cube_output.get()
@@ -149,8 +167,6 @@ def Yellow_Cross_Edges():
   solver = Solver(cube)
 
   solver.yellow_cross_edges()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The fifth stage is switching the yellow edge cubies
   to their correct position, respective to the center cubies
@@ -160,7 +176,8 @@ def Yellow_Cross_Edges():
   in that case move on to stage six""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Yellow_Cross_Corners_Place():
   string = current_cube_output.get()
@@ -168,8 +185,6 @@ def Yellow_Cross_Corners_Place():
   solver = Solver(cube)
 
   solver.yellow_cross_corners_place()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The sixth stage is getting the last four corner cubies
   in their correct position, respective to the sides face colors of the cube.
@@ -177,7 +192,8 @@ def Yellow_Cross_Corners_Place():
   the only goal is getting  them  in  their  correct  position. """)
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Yellow_Cross_Corners_Orientation():
   string = current_cube_output.get()
@@ -185,8 +201,6 @@ def Yellow_Cross_Corners_Orientation():
   solver = Solver(cube)
 
   solver.yellow_cross_corners_orientation()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The seventh and last stage is about the
   last four corner cubies orientation.
@@ -194,7 +208,8 @@ def Yellow_Cross_Corners_Orientation():
   thus orienting the last four corner cubies will solve the Rubik’s Cube.""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def F_2_L():
   string = current_cube_output.get()
@@ -202,8 +217,6 @@ def F_2_L():
   solver = Solver(cube)
 
   solver.F_2_L()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The thirth stage combines stages 2 and 3 from the Beginner Strategy.
   Instead of solving these two stages individually,
@@ -214,7 +227,8 @@ def F_2_L():
   edge cubie from stage 3, before putting them in their correct position""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def Simple_PLL():
   string = current_cube_output.get()
@@ -223,15 +237,14 @@ def Simple_PLL():
 
   solver.yellow_cross_edges_PLL()
   solver.yellow_cross_corners_place_PLL()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The Fourt stage combines stages 5 and 6 from the Beginner Strategy
   The aim is to place all the edges and corners in their correct position.
   The beginners method uses a lot of repetition, this method solves it quicker""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def O_L_L():
   string = current_cube_output.get()
@@ -239,8 +252,6 @@ def O_L_L():
   solver = Solver(cube)
 
   solver.OLL()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""The goal of this stage is to orientate all the cubies on the U face
   of the cube insuch a way that the entire U face is yellow.
@@ -248,7 +259,8 @@ def O_L_L():
   and edge cubies do not matter, these will be fixed in a later stage""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 def P_L_L():
   string = current_cube_output.get()
@@ -256,8 +268,6 @@ def P_L_L():
   solver = Solver(cube)
 
   solver.PLL()
-  current_cube_output.set(cube.flat_str())
-  cube_output.set(cube)
 
   goal.set("""This stage will combine moving the corner- and
   edge cubies simultaneously to their correct positions.
@@ -265,13 +275,8 @@ def P_L_L():
   many of the correct positionsas possible.""")
   opt_moves.set(optimize_moves(solver.moves))
   if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
-
-def reset_moves():
-  if Checkbutton1.get() == 1:
-    moves.set(opt_moves.get())
-  if Checkbutton1.get() == 0:
-    moves.set("")
+    for move in reversed(optimize_moves(solver.moves)):
+        move_entry.insert(0, move + ' ')
 
 # Initial set up
 window = Tk()
@@ -284,6 +289,7 @@ current_cube_output = StringVar()
 moves               = StringVar()
 goal                = StringVar()
 opt_moves           = StringVar()
+self_moves          = StringVar()
 
 current_cube_output.set("OOOOOOOOOGGGWWWBBBYYYGGGWWWBBBYYYGGGWWWBBBYYYRRRRRRRRR")
 cube = Cube(current_cube_output.get())
@@ -303,8 +309,10 @@ goal_label                = Label(window, text = 'Goal of this stage:', font=('r
 goal_output_label         = Message(window, textvariable = goal, font=('roboto',12), bg="AntiqueWhite", width=400, justify=CENTER)
 
 cube_entry    = Entry(window, textvariable = cube_string, font = ('roboto',10,'normal'), width=75)
+move_entry    = Entry(window, textvariable = self_moves, font = ('roboto',10,'normal'), width=75)
 ins_button    = ttk.Button(window,text = 'Insert', command = insert)
 random_button = ttk.Button(window,text = 'Random', command = random_cube)
+move_button   = ttk.Button(window,text = 'Move', command = move)
 
 beginner     = Label(window, text = 'Beginner Strategy', font=('roboto',13, 'bold'), bg="AntiqueWhite")
 intermediate = Label(window, text = 'Intermediate Strategy', font=('roboto',13, 'bold'), bg="AntiqueWhite")
@@ -336,8 +344,7 @@ Checkbutton1 = IntVar()
 move_check  = ttk.Checkbutton(window, text = "Show me the required moves",
                              variable = Checkbutton1,
                              onvalue = 1,
-                             offvalue = 0,
-                             command = reset_moves)
+                             offvalue = 0)
 
 # Grid Places
 title_label.grid(row=0, column=1)
@@ -381,6 +388,9 @@ goal_output_label.grid(row=15, column=1)
 move_check.grid(row=17, column=1)
 moves_label.grid(row=18, column=1)
 moves_output_label.grid(row=19, column=1)
+
+move_entry.grid(row=20, column=1)
+move_button.grid(row=20, column=2)
 
 window.geometry("800x750")
 window.mainloop()
